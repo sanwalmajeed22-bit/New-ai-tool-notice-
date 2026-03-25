@@ -1,0 +1,36 @@
+name: Daily AI Tools Email
+
+on:
+  schedule:
+    # 10 PM Pakistan Time = 5 PM UTC (PKT is UTC+5)
+    - cron: '0 17 * * *'
+  
+  # Manual trigger bhi available hai testing ke liye
+  workflow_dispatch:
+
+jobs:
+  send-ai-tools-email:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Code checkout
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python setup
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Dependencies install
+        run: |
+          pip install requests
+
+      - name: 🤖 AI Tools Email Send karo
+        env:
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          python send_ai_tools.py
+
+      - name: ✅ Done
+        run: echo "Email successfully send ho gayi! Raat 10 PM PKT"
